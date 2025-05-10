@@ -19,13 +19,22 @@ class Agent:
     
     # The agent's main loop
     def act(self):
+        path = self.bfs(self.env.level) # Find the path to the goal
         level = self.env.level
         position = self.position
         while self.running:
-            direction = random.choice([UP, DOWN, LEFT, RIGHT, STAY])
-            # self.move(direction)
-            (position, level) = self.env.get_next_state(position, level, direction)
-            sleep(0.5)
+            if path is None:
+                print("No path found")
+                break
+
+            if len(path) > 0:
+                direction = path.pop()  # path is reversed so we pop from the end
+                self.position = self.env.move(self, direction)
+                self.env.print()
+                sleep(0.5)
+            else:
+                self.running = False
+
 
     def get_next_state(self, direction, level):
         (pos, level) = self.env.get_next_state(self.position, level, direction)
@@ -34,20 +43,19 @@ class Agent:
 
     # Runs the agent in a separate thread
     def run(self):
-        print(f"Agent {self.aid} started at position {self.position}")
         Thread(target=self.act).start()
 
     def serialize_level(self, level):
         return ''.join([''.join(row) for row in level])
 
-    def bfs(self, level, position):
+    def bfs(self, level):
         queue = Queue()
         visited = {}
         parent = {}  # Maps serialized level to (prev_serial, action)
 
         start_serial = self.serialize_level(level)
         visited[start_serial] = True
-        queue.put((position, level))
+        queue.put((self.position, level))
         parent[start_serial] = (None, None)  # Start has no parent or action
 
         while not queue.empty():
@@ -62,15 +70,15 @@ class Agent:
                     actions.append(action)
                     current_serial = prev_serial
 
-                print("Path found:", actions[::-1])
-                return actions[::-1]  # Reverse to get path from start to goal
+                print("Path found:", actions[::-1]) # Display the path in the correct order
+                return actions
 
             for direction in [UP, DOWN, LEFT, RIGHT]:
                 next_position, next_level = self.env.get_next_state(current_position, current_level, direction)
                 next_serial = self.serialize_level(next_level)
 
                 if not visited.get(next_serial):
-                    self.env.write_to_file(next_level)
+                    # self.env.write_to_file(next_level)
                     visited[next_serial] = True
                     parent[next_serial] = (current_serial, direction)
                     queue.put((next_position, next_level))

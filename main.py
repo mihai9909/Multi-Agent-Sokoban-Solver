@@ -1,6 +1,3 @@
-from agent import UP, DOWN, LEFT, RIGHT, STAY, agent
-from environment import env
+from agent import agent
 
-solution = agent.bfs(env.level, agent.position)
-
-print("Solution found: ", solution)
+agent.act()

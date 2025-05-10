@@ -6,19 +6,19 @@ class Environment():
         self.level = """
 #########
 #    #  #
-#   $#  #
+# $  #  #
 # @     #
 # # $   #
-# #     #
+# #   $ #
 #########
 """
         self.goal_positions = """
 #########
-#       #
-#   .   #
-#   .   #
+#     ..#
 #       #
 #       #
+#       #
+#    .  #
 #########
 """
         self.level = [list(row) for row in self.level.split('\n') if row]
