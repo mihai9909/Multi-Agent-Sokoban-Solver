@@ -10,16 +10,17 @@ LEFT = (-1, 0)
 RIGHT = (1, 0)
 STAY = (0, 0)
 
+
 class Agent:
-    def __init__(self, x, y, aid):
+    def __init__(self, x, y, aid, env):
         self.aid = aid
-        self.env = environment.env
+        self.env = env
         self.position = (x, y)
         self.running = True
-    
+
     # The agent's main loop
     def act(self):
-        path = self.bfs(self.env.level) # Find the path to the goal
+        path = self.bfs(self.env.level)  # Find the path to the goal
         level = self.env.level
         position = self.position
         while self.running:
@@ -34,7 +35,6 @@ class Agent:
                 sleep(0.5)
             else:
                 self.running = False
-
 
     def get_next_state(self, direction, level):
         (pos, level) = self.env.get_next_state(self.position, level, direction)
@@ -70,7 +70,7 @@ class Agent:
                     actions.append(action)
                     current_serial = prev_serial
 
-                print("Path found:", actions[::-1]) # Display the path in the correct order
+                print("Path found:", actions[::-1])  # Display the path in the correct order
                 return actions
 
             for direction in [UP, DOWN, LEFT, RIGHT]:
@@ -86,6 +86,5 @@ class Agent:
         return None  # Goal not found
 
 
-
-agent = Agent(2, 3, 1)#.run()
+agent = Agent(2, 3, 1, environment.env)  # .run()
 # agent2 = Agent(3, 4, 2).run()

@@ -1,8 +1,11 @@
 from threading import Thread, Lock
 
 class Environment():
-    def __init__(self):
+    def __init__(self, _level, _goal_positions):
         self.global_lock = Lock()
+        self.level = _level
+        self.goal_positions = _goal_positions
+        '''
         self.level = """
 #########
 #    #  #
@@ -21,6 +24,7 @@ class Environment():
 #    .  #
 #########
 """
+        '''
         self.level = [list(row) for row in self.level.split('\n') if row]
         self.goal_positions = [list(row) for row in self.goal_positions.split('\n') if row]
         self.goal_positions_list = []
@@ -149,4 +153,23 @@ class Environment():
                         print(self.level[i][j], end='')
                 print()
 
-env = Environment()
+
+level = """
+#########
+#    #  #
+# $  #  #
+# @     #
+# # $   #
+# # @ $ #
+#########
+"""
+goal_positions = """
+#########
+#     ..#
+#       #
+#       #
+#       #
+#    .  #
+#########
+"""
+env = Environment(level, goal_positions)
